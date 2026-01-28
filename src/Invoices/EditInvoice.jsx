@@ -2,9 +2,10 @@ import  { useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
-import { url } from './utils/constants';
+import { url } from '../utils/constants';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 
 // Function to convert number to words
 const numberToWords = (num) => {
@@ -38,8 +39,9 @@ const numberToWords = (num) => {
 };
 
 
-const CreateInvoice = () => {
-  const navigate=useNavigate()
+const EditInvoice = () => {
+    const navigate=useNavigate()
+  const [invoice,setInvoice]=useState("")
   const [address_suggestions, setaddress_Suggestions] = useState([]);
   const [showaddress_Suggestions, setShowaddress_Suggestions] = useState(false);
 
@@ -47,21 +49,21 @@ const CreateInvoice = () => {
   const [showgoods_Suggestions, setShowgoods_Suggestions] = useState(false);
 
   const initialValues = {
-    date_lr: '',
-    lr_no: '',
-    vehicle_no: '',
-    description_of_goods: '',
-    weight: '',
-    rate: '',
-    lr_charges: 50.00,
-    freight_amount: '',
-    igst_amount: '',
-    total_amount: '',
-    bill_no: '',
-    address: '',
-    amount_in_word: '',
-    from: '',
-    to: ''
+    date_lr: invoice.date_lr,
+    lr_no: invoice.lr_no,
+    vehicle_no: invoice.vehicle_no,
+    description_of_goods: invoice.description_of_goods,
+    weight: invoice.weight,
+    rate: invoice.rate,
+    lr_charges: invoice.lr_charges,
+    freight_amount: invoice.freight_amount,
+    igst_amount: invoice.igst_amount,
+    total_amount: invoice.total_amount,
+    bill_no: invoice.bill_no,
+    address: invoice.address,
+    amount_in_word: invoice.amount_in_word,
+    from: invoice.from,
+    to: invoice.to
   };
 
   const validationSchema = Yup.object().shape({
@@ -128,43 +130,70 @@ const CreateInvoice = () => {
     setShowgoods_Suggestions(false);
   };
   const handleSubmit = (values) => {
-    console.log(values);
-    postInvoices(values)
+    console.log(values)
+    update_save_Invoice(values)
   };
 
-  const postInvoices=async(invoice)=>{
-    await axios.post(`${url}/addinvoice`,invoice)
-  }
-  const handleClose=()=>{
-    navigate('/viewinvoice')
+  const {id}=useParams()
+  useEffect(()=>{
+    getEditInvoice()
+  },[])
+
+  const getEditInvoice=async()=>{
+    const getInvoice=await axios.get(`${url}/editinvoice/${id}`)
+    console.log(getInvoice.data[0])
+    setInvoice(getInvoice.data[0])
+    
   }
 
+  const update_save_Invoice=async (values)=>{  
+    console.log(values)
+    console.log(`${url}/updateinvoice/${id}`)
+    const updateInvoice=await axios.put(`${url}/updateinvoice/${id}`,values)
+    console.log(updateInvoice)
+  }
+  
   return (
-    <div className='absolute top-10 left-[19%] right-0 px-4'>
-      <div className="container mx-auto p-4 max-w-screen-lg">
+   <>
+   {invoice && <div className='absolute top-10 left-[19%] right-0 px-4'>
+         <div className="container mx-auto p-4 max-w-screen-lg">
         <div className="flex justify-center">
           <div className="w-full">
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
               <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                 {({ setFieldValue }) => (
                   <Form>
-                    <div className="p-5 ">
-                      <div className='flex justify-between'>
-                        <h1 className="text-gray-900 mb-3 text-xl font-semibold">
-                          Add Invoice
-                        </h1>
-                        <button
-                        type="button"
-                        className=" text-gray-600 hover:text-gray-900"
-                        onClick={handleClose}
-                        >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                      </button>
-                      </div>
+                    <div className="ps-5 pe-5 pt-0 pb-5">
+                      <div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                       {/* Button Update and Save */}
+                      <div className="mt-4 flex  justify-between mb-2 gap-x-2">
+                        <h1 className="text-gray-900 mb-3 text-xl font-semibold ">
+                          Edit Invoice
+                        </h1>
+
+                       <div className='flex justify-end gap-5'>
+                          <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                        onClick={()=>navigate('/viewinvoice')}
+                        >
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                          Back
+                        </button>
+                        <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                       
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                          </svg>
+                          Update & Save
+                        </button>
+                       </div>
+                      </div>
+                      <hr/>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
                         <div className="form-group">
                           <label htmlFor="date_lr" className="form-label">Date LR</label>
                           <Field type="date" className="form-control" id="date_lr" name="date_lr" />
@@ -285,25 +314,34 @@ const CreateInvoice = () => {
                           <Field type="text" className="form-control" id="to" name="to" />
                           <ErrorMessage name="to" component="div" className="text-red-500 text-sm" />
                         </div>
+                        
+                        {/* Date  of Payment  */}
+                        <div className="form-group">
+                          <label htmlFor="date_payment" className="form-label">Payment Received Date</label>
+                          <Field type="date" className="form-control" id="date_payment" name="date_payment" />
+                          <ErrorMessage name="date_payment" component="div" className="text-red-500 text-sm" />
+                        </div> 
+                       
+                        {/* Update Feild > Paid || Unpaid */}
+                        <div className="form-group">
+                          <label htmlFor="status" className="form-label">Payment Status</label>
+                          <Field as="select" className="form-control" id="status" name="status">
+                            <option value="">Select Status</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Unpaid">Unpaid</option>
+                          </Field>
+                          <ErrorMessage name="status" component="div" className="text-red-500 text-sm" />
+                        </div>
+                       
+                        {/* Amount Recvd from client */}
+                        <div className="form-group">
+                          <label htmlFor="amt_recvd" className="form-label">Amount Received</label>
+                          <Field type="text" className="form-control" id="amt_recvd" name="amt_recvd" />
+                          <ErrorMessage name="amt_recvd" component="div" className="text-red-500 text-sm" />
+                        </div>
+                          
                       </div>
-                      
-                      <div className="mt-4 flex justify-between">
-                        <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded inline-flex items-center"
-                        onClick={()=>navigate('/viewinvoice')}
-                        >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                          Back
-                        </button>
-
-                        <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                          Create Invoice
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                          </svg>
-                        </button>
-                      </div>
+                     
                     </div>
                   </Form>
                 )}
@@ -313,7 +351,10 @@ const CreateInvoice = () => {
         </div>
       </div>
     </div>
+    }
+   
+   </>
   );
 };
 
-export default CreateInvoice;
+export default EditInvoice;

@@ -8,17 +8,21 @@ import { BsChevronDown } from "react-icons/bs";
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
 
-const SideBar = () => {
-    const [open,setOpen]=useState(true)
+const SideBar = ({open,setOpen}) => {
     const [submenuOpen,setSubmenuOpen]=useState(false)
     const navigate=useNavigate()
   return (
     <>
     
-    <div className={`bg-dark-navy text-white h-[100%] p-5 pt-3 duration-300 relative px-5  ${open?"w-72":"w-[78px]"} `}>
-        <BsArrowLeftShort className={`bg-white text-dark-navy text-3xl rounded-full absolute -right-3 top-3 border border-dark-navy cursor-pointer ${!open && "rotate-180"}`}
-        onClick={()=>{setOpen(!open)}}
-        />
+    {/* <div className={`bg-dark-navy text-white h-[100%] p-5 pt-3 duration-300 relative px-5  ${open?"w-72":"w-[78px]"} `}> */}
+     <div className={`z-20 bg-dark-navy text-white h-screen p-5 pt-3 duration-300 fixed top-0 left-0 ${open ? "w-72" : "w-[78px]"}`}>
+ 
+        <BsArrowLeftShort
+        className={`bg-white text-dark-navy text-3xl rounded-full absolute -right-3 top-3 cursor-pointer ${
+          !open && "rotate-180"
+        }`}
+        onClick={() => setOpen(!open)}
+      />
         <div className="inline-flex">
         <FcInTransit  className="text-4xl rounded cursor-pointer block float-left mr-2"/>
         <h1 className={`text-white origin-left font-meduim text-xl mt-1 font-mono duration-300 ${!open && "scale-0"}`}>Sadhavi</h1>

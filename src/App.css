@@ -26,4 +26,12 @@
     outline: none;
     box-shadow: 0 0 0 1px #a0aec0;
   }
+  body {
+  overflow-x: hidden;
+}
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
   
