@@ -36,7 +36,7 @@ const InvoiceTable = ({ currentPage, paginatedData, onDeleteSuccess }) => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <div className="min-w-[1400px] bg-white shadow-lg rounded-xl overflow-hidden">
+      <div className="min-w-[2000px] bg-white shadow-lg rounded-xl overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-blue-50 text-gray-700 uppercase text-xs font-semibold sticky top-0 z-10">
             <tr>
@@ -60,6 +60,8 @@ const InvoiceTable = ({ currentPage, paginatedData, onDeleteSuccess }) => {
               <th className="px-2 py-2">Payment Date</th>
               <th className="px-2 py-2">Amount Recvd</th>
               <th className="px-2 py-2">Balance</th>
+              <th className="px-2 py-2">Created At</th>
+              <th className="px-2 py-2">Updated At</th>
             </tr>
           </thead>
 
@@ -111,25 +113,25 @@ const InvoiceTable = ({ currentPage, paginatedData, onDeleteSuccess }) => {
 
                   {/* Data */}
                   <td className="px-2 py-1 text-center">{(currentPage - 1) * 5 + index + 1}</td>
-                  <td className="px-2 py-1">{el.bill_no}</td>
-                  <td className="px-2 py-1">{lrDate}</td>
-                  <td className="px-2 py-1">{el.lr_no}</td>
-                  <td className="px-2 py-1">{el.vehicle_no}</td>
-                  <td className="px-2 py-1">{el.weight}</td>
-                  <td className="px-2 py-1">{el.rate}</td>
-                  <td className="px-2 py-1">{el.freight_amount}</td>
-                  <td className="px-2 py-1">{el.igst_amount}</td>
-                  <td className="px-2 py-1">{el.lr_charges}</td>
-                  <td className="px-2 py-1 font-medium">{el.total_amount}</td>
-                  <td className="px-2 py-1">{el.clientName}</td>
-                  <td className="px-2 py-1">{el.description_of_goods}</td>
-                  <td className="px-2 py-1">{el.from}</td>
-                  <td className="px-2 py-1">{el.to}</td>
+                  <td className="px-2 py-1 text-center">{el.bill_no}</td>
+                  <td className="px-2 py-1 text-center">{lrDate}</td>
+                  <td className="px-2 py-1 text-center">{el.lr_no}</td>
+                  <td className="px-2 py-1 text-center">{el.vehicle_no}</td>
+                  <td className="px-2 py-1 text-center">{el.weight}</td>
+                  <td className="px-2 py-1 text-center">{el.rate}</td>
+                  <td className="px-2 py-1 text-center">{el.freight_amount}</td>
+                  <td className="px-2 py-1 text-center">{el.igst_amount}</td>
+                  <td className="px-2 py-1 text-center">{el.lr_charges}</td>
+                  <td className="px-2 py-1 text-center font-medium">{el.total_amount}</td>
+                  <td className="px-2 py-1 text-center">{el.clientName}</td>
+                  <td className="px-2 py-1 text-center">{el.description_of_goods}</td>
+                  <td className="px-2 py-1 text-center">{el.from}</td>
+                  <td className="px-2 py-1 text-center">{el.to}</td>
 
                   {/* Status badge */}
-                  <td className="px-2 py-1">
+                  <td className="px-2 py-1 text-center">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${el.payment_status === "Paid"
+                      className={`px-2 py-1 text-center rounded-full text-xs font-medium ${el.payment_status === "Paid"
                           ? "bg-green-100 text-green-800"
                           : el.payment_status === "Unpaid"
                             ? "bg-red-100 text-red-800"
@@ -140,9 +142,12 @@ const InvoiceTable = ({ currentPage, paginatedData, onDeleteSuccess }) => {
                     </span>
                   </td>
 
-                  <td className="px-2 py-1">{paymentDate}</td>
-                  <td className="px-2 py-1">{el.amt_recvd}</td>
-                  <td className="px-2 py-1">{el.balance_payment}</td>
+                  <td className="px-2 py-1 text-center">{paymentDate}</td>
+                  <td className="px-2 py-1 text-center">{el.amt_recvd}</td>
+                  <td className="px-2 py-1 text-center">{el.balance_payment}</td>
+                   <td className="px-2 py-1 text-center">{el.createdAt?"-":"--"}</td>
+                  <td className="px-2 py-1 text-center">{el.updatedAt?"-":"--"}</td>
+
                 </tr>
               );
             })}

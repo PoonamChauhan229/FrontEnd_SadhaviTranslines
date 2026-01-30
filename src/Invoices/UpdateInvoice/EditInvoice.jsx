@@ -12,6 +12,7 @@ const EditInvoice = () => {
   const navigate = useNavigate();
 
   const [invoice, setInvoice] = useState(null);
+  console.log("newinvoice",invoice)
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
@@ -20,10 +21,10 @@ const EditInvoice = () => {
     });
   }, [id]);
 
-  if (!invoice) return null; // ✅ prevents undefined error
+  if (!invoice) return null; 
 
   return (
-    /* 🔑 DO NOT REMOVE — prevents scrollbar */
+    /*  DO NOT REMOVE — prevents scrollbar */
     <div className="relative flex-1 overflow-x-hidden">
       <div className="pt-16 px-6 max-w-full">
         <div className="bg-white shadow-lg rounded-lg p-6 overflow-x-auto">
@@ -41,7 +42,7 @@ const EditInvoice = () => {
 
       {showSuccess && (
         <SuccessPopup
-          title="Invoice Updated 🎉"
+          title="Invoice Updated"
           message="The invoice has been updated successfully."
           onClose={() => {
             setShowSuccess(false);

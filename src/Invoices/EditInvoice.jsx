@@ -47,7 +47,7 @@ const EditInvoice = () => {
   if (!invoice) return null;
 
   return (
-    /* 🔑 ROOT WRAPPER — fixes sidebar + navbar + scrollbar */
+    /* ROOT WRAPPER — fixes sidebar + navbar + scrollbar */
     <div className="relative flex-1 overflow-x-hidden">
       {/* Navbar offset */}
       <div className="pt-16 px-6 max-w-full">

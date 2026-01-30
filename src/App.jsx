@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import SideBar from "./SideBar";
 import Navbar from "./Navbar";
-import CreateInvoice from "./Invoices/CreateInvoice";
+// import CreateInvoice from "./Invoices/CreateInvoice";
+import CreateInvoice from './Invoices/AddInvoice/CreateInvoice'
 import ViewInvoices from './Invoices/ShowInvoices/ViewInvoices'
 // import EditInvoice from "./Invoices/EditInvoice";
 import { useState } from "react";
