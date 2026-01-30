@@ -3,14 +3,17 @@ import SideBar from "./SideBar";
 import Navbar from "./Navbar";
 import CreateInvoice from "./Invoices/CreateInvoice";
 import ViewInvoices from './Invoices/ShowInvoices/ViewInvoices'
-import EditInvoice from "./Invoices/EditInvoice";
+// import EditInvoice from "./Invoices/EditInvoice";
 import { useState } from "react";
+import EditInvoice from "./Invoices/UpdateInvoice/EditInvoice";
 
 export default function App() {
   const [open, setOpen] = useState(true);
 
   return (
-    <div className="flex w-screen overflow-x-hidden">
+    // <div className="flex w-screen overflow-x-hidden">
+    <div className="w-full min-h-screen overflow-x-hidden">
+
       {/* Sidebar */}
       <SideBar open={open} setOpen={setOpen} />
 
@@ -26,7 +29,8 @@ export default function App() {
           <Routes>
             <Route path="/createinvoices" element={<CreateInvoice />} />
             <Route path="/viewinvoice" element={<ViewInvoices />} />
-            <Route path="/editinvoice/:id" element={<EditInvoice />} />
+            {/* <Route path="/editinvoice/:id" element={<EditInvoice />} /> */}
+             <Route path="/editinvoice/:id" element={<EditInvoice />} />
           </Routes>
         </div>
       </div>

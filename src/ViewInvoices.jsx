@@ -201,7 +201,7 @@ const ViewInvoices = () => {
                                                         <MdDeleteForever 
                                                             className='text-red-600 text-lg cursor-pointer' 
                                                             title="Delete Invoice"
-                                                            onClick={() => navigate(`/deleteInvoice/${_id}`)} 
+                                                            onClick={() => handleDelete(_id)} 
                                                         />
                                                     </div>
                                                 </td>

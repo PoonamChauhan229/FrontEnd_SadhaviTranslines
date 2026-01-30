@@ -89,7 +89,14 @@ const ViewInvoices = () => {
           applyFilters={applyFilters}
         />
 
-        <InvoiceTable paginatedData={paginatedData} currentPage={currentPage} />
+        <InvoiceTable
+          currentPage={currentPage}
+          paginatedData={paginatedData}
+          onDeleteSuccess={(id) => {
+            setFilteredInvoices(prev => prev.filter(inv => inv._id !== id));
+          }}
+        />
+
 
         <InvoicePagination
           totalPages={totalPages}
