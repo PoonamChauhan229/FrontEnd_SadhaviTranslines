@@ -21,7 +21,8 @@ export const Menus = [
     },
     {
         title: "Lr Copies",
-        icon: <AiOutlineFileText />
+        icon: <AiOutlineFileText />,
+        navigateUrl:"createlr"
     },
     {
         title: "Media",
@@ -34,14 +35,14 @@ export const Menus = [
         submenu: true,
         submenuItems: [
             {
-                title: "Submenu 1"
+                title: "Clients"
             },
             {
-                title: "Submenu 2"
+                title: "Goods"
             },
-            {
-                title: "Submenu 3"
-            }
+            // {
+            //     title: "Submenu 3"
+            // }
         ]
     },
     {

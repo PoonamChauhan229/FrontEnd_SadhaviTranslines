@@ -7,6 +7,8 @@ import ViewInvoices from './Invoices/ShowInvoices/ViewInvoices'
 // import EditInvoice from "./Invoices/EditInvoice";
 import { useState } from "react";
 import EditInvoice from "./Invoices/UpdateInvoice/EditInvoice";
+import CreateLR from "./LRCopies/AddLRCopies/CreateLR";
+import ViewLR from "./LRCopies/AddLRCopies/ViewLR";
 
 export default function App() {
   const [open, setOpen] = useState(true);
@@ -32,6 +34,9 @@ export default function App() {
             <Route path="/viewinvoice" element={<ViewInvoices />} />
             {/* <Route path="/editinvoice/:id" element={<EditInvoice />} /> */}
              <Route path="/editinvoice/:id" element={<EditInvoice />} />
+             <Route path="/createlr" element={<CreateLR />} />
+             <Route path="/viewlr" element={<ViewLR />} />
+
           </Routes>
         </div>
       </div>
