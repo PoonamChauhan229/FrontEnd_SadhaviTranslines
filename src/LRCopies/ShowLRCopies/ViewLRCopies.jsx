@@ -18,13 +18,39 @@ const ViewLRCopies = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  useEffect(() => {
-    axios.get(`${url}/viewlrs`).then((res) => {
-      setLrList(res.data);
-      setFiltered(res.data);
-    });
-  }, []);
+  /* ---------- Fetch LRs ---------- */
+useEffect(() => {
+  axios.get(`${url}/get-lrs`).then((res) => {
+    const data = res.data?.lrs || [];
+    setLrList(data);
+    setFiltered(data);
+  });
+}, []);
 
+
+  /* ---------- Download LR ---------- */
+  const downloadLR = async (lrId, color) => {
+    try {
+      const res = await axios.get(
+        `${url}/download-lr/${lrId}/${color}`,
+        { responseType: "blob" }
+      );
+
+      const blobUrl = window.URL.createObjectURL(res.data);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${color}-${lrId}.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to download LR");
+    }
+  };
+
+  /* ---------- Filters ---------- */
   const applyFilters = (e) => {
     e.preventDefault();
     let data = [...lrList];
@@ -49,6 +75,7 @@ const ViewLRCopies = () => {
     goToPage(1);
   };
 
+  /* ---------- Export ---------- */
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(filtered);
     const wb = XLSX.utils.book_new();
@@ -78,6 +105,7 @@ const ViewLRCopies = () => {
       <LRCopiesTable
         paginatedData={paginatedData}
         currentPage={currentPage}
+        onDownload={downloadLR}
         onDeleteSuccess={(id) =>
           setFiltered((prev) => prev.filter((lr) => lr._id !== id))
         }

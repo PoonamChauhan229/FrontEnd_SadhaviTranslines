@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../utils/constants";
 
-const LRCopiesTable = ({ paginatedData, currentPage, onDeleteSuccess }) => {
+const LRCopiesTable = ({
+  paginatedData,
+  currentPage,
+  onDeleteSuccess,
+  onDownload,
+}) => {
   const navigate = useNavigate();
 
   const handleDelete = async (id) => {
@@ -20,18 +25,19 @@ const LRCopiesTable = ({ paginatedData, currentPage, onDeleteSuccess }) => {
             <th>Actions</th>
             <th>Sr</th>
             <th>LR No</th>
-            <th>LR Date</th>
-            <th>Vehicle No</th>
+            <th>Date</th>
+            <th>Vehicle</th>
             <th>From</th>
             <th>To</th>
             <th>Weight</th>
             <th>Consignee</th>
+            <th>Download</th>
           </tr>
         </thead>
 
         <tbody>
           {paginatedData.map((el, index) => (
-            <tr key={el._id} className="hover:bg-blue-50">
+            <tr key={el._id} className="hover:bg-blue-50 text-sm">
               <td className="flex gap-2 justify-center py-1">
                 <MdEdit
                   className="text-blue-600 cursor-pointer"
@@ -55,6 +61,27 @@ const LRCopiesTable = ({ paginatedData, currentPage, onDeleteSuccess }) => {
               <td className="text-center">{el.destination}</td>
               <td className="text-center">{el.weight}</td>
               <td className="text-center">{el.consigneeName}</td>
+
+              <td className="flex gap-1 justify-center py-1">
+                <button
+                  onClick={() => onDownload(el._id, "whitelr")}
+                  className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+                >
+                  White
+                </button>
+                <button
+                  onClick={() => onDownload(el._id, "pinklr")}
+                  className="px-2 py-1 bg-pink-500 text-white rounded text-xs"
+                >
+                  Pink
+                </button>
+                <button
+                  onClick={() => onDownload(el._id, "bluelr")}
+                  className="px-2 py-1 bg-blue-800 text-white rounded text-xs"
+                >
+                  Blue
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

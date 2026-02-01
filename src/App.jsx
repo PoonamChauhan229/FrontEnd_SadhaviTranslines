@@ -9,6 +9,7 @@ import { useState } from "react";
 import EditInvoice from "./Invoices/UpdateInvoice/EditInvoice";
 import CreateLR from "./LRCopies/AddLRCopies/CreateLR";
 import ViewLR from "./LRCopies/AddLRCopies/ViewLR";
+import ViewLRCopies from "./LRCopies/ShowLRCopies/ViewLRCopies";
 
 export default function App() {
   const [open, setOpen] = useState(true);
@@ -35,7 +36,9 @@ export default function App() {
             {/* <Route path="/editinvoice/:id" element={<EditInvoice />} /> */}
              <Route path="/editinvoice/:id" element={<EditInvoice />} />
              <Route path="/createlr" element={<CreateLR />} />
-             <Route path="/viewlr" element={<ViewLR />} />
+             {/* <Route path="/viewlr" element={<ViewLR />} /> */}
+             <Route path="/viewlr" element={<ViewLRCopies />} />
+              <Route path="/" element={<ViewInvoices />} />
 
           </Routes>
         </div>

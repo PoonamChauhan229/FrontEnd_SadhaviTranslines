@@ -22,7 +22,7 @@ export const Menus = [
     {
         title: "Lr Copies",
         icon: <AiOutlineFileText />,
-        navigateUrl:"createlr"
+        navigateUrl:"viewlr"
     },
     {
         title: "Media",

@@ -1,18 +1,40 @@
 import { useState } from 'react';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import axios from 'axios';
 import { url } from '../../utils/constants';
-import { useNavigate } from 'react-router-dom';
 
-import CreateLRHeader from './CreateLRHeader';
-import CreateLRFormFields from './CreateLRFormFields';
-import CreateLRSuccess from './CreateLRSuccess';
-import { lrValidationSchema } from './lrValidation';
+/* ---------------- Success Modal ---------------- */
+const CreateLRSuccess = ({ show, onClose }) => {
+  if (!show) return null;
 
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white p-5 rounded-lg text-center w-72">
+        <h2 className="text-green-600 font-semibold mb-2">
+          LR Created 🎉
+        </h2>
+
+        <button
+          onClick={onClose}
+          className="mt-3 bg-blue-500 text-white px-5 py-1.5 rounded text-sm"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
+
+/* ---------------- Main Component ---------------- */
 const CreateLR = () => {
-  const navigate = useNavigate();
+  const [clientSuggestions, setClientSuggestions] = useState([]);
+  const [showClients, setShowClients] = useState(false);
+
+  const [goodsSuggestions, setGoodsSuggestions] = useState([]);
+  const [showGoods, setShowGoods] = useState(false);
+
   const [showSuccess, setShowSuccess] = useState(false);
-  const [generatedImages, setGeneratedImages] = useState(null); // base64 images
 
   const initialValues = {
     lrNo: '',
@@ -26,95 +48,157 @@ const CreateLR = () => {
     description: '',
   };
 
+  const validationSchema = Yup.object({
+    lrNo: Yup.string().required('LR No required'),
+    lrDate: Yup.date().required('LR Date required'),
+    lrVehicleNo: Yup.string().required('Vehicle No required'),
+    startPoint: Yup.string().required('From required'),
+    destination: Yup.string().required('To required'),
+    weight: Yup.string().required('Weight required'),
+    consigneeName: Yup.string().required('Consignee name required'),
+    consigneeAddress: Yup.string().required('Consignee address required'),
+    description: Yup.string().required('Description required'),
+  });
+
+  /* -------- Client auto fetch -------- */
+  const handleClientSearch = async (query) => {
+    if (!query) return;
+    const res = await axios.get(`${url}/clients`, { params: { query } });
+    setClientSuggestions(res.data);
+    setShowClients(true);
+  };
+
+  const selectClient = (client, setFieldValue) => {
+    setFieldValue('consigneeName', client.name);
+    setFieldValue('consigneeAddress', client.address);
+    setShowClients(false);
+  };
+
+  /* -------- Goods auto fetch -------- */
+  const handleGoodsSearch = async (query) => {
+    if (!query) return;
+    const res = await axios.get(`${url}/goods`, { params: { query } });
+    setGoodsSuggestions(res.data);
+    setShowGoods(true);
+  };
+
+  const selectGoods = (goods, setFieldValue) => {
+    setFieldValue('description', goods.description_goods);
+    setShowGoods(false);
+  };
+
+  /* -------- Submit -------- */
   const handleSubmit = async (values, { resetForm }) => {
-    try {
-      const res = await axios.post(`${url}/create-lr`, values);
-      setGeneratedImages(res.data.images); // store base64 images
-      setShowSuccess(true);
-      resetForm();
-    } catch (err) {
-      console.error(err);
-      alert('Failed to create LR');
-    }
+    await axios.post(`${url}/create-lr`, values);
+    setShowSuccess(true);
+    resetForm();
   };
 
   return (
-    <div className="w-full px-4 py-4 overflow-hidden">
-      <div className="max-w-screen-lg mx-auto">
-        <div className="bg-white shadow-md rounded-lg px-5 py-4">
-          <Formik
-            initialValues={initialValues}
-            onSubmit={handleSubmit}
-            validateOnChange
-            validateOnBlur
-            validationSchema={lrValidationSchema}
-          >
-            {({ setFieldValue, errors, submitCount }) => (
-              <Form className="space-y-4">
-                <CreateLRHeader title="Add LR" />
+    <>
+      <div className="max-w-screen-lg mx-auto p-4">
+        <h1 className="text-xl font-semibold mb-4">Create LR</h1>
 
-                <CreateLRFormFields
-                  setFieldValue={setFieldValue}
-                  errors={errors}
-                  submitCount={submitCount}
-                />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ setFieldValue }) => (
+            <Form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                <div className="flex justify-between pt-4 border-t">
-                  <button
-                    type="button"
-                    onClick={() => navigate('/viewlr')}
-                    className="px-4 py-2 bg-gray-200 rounded"
-                  >
-                    Back
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="px-6 py-2 bg-blue-500 text-white rounded"
-                  >
-                    Create LR
-                  </button>
+              {[
+                ['lrNo', 'text', 'LR No'],
+                ['lrDate', 'date', 'LR Date'],
+                ['lrVehicleNo', 'text', 'Vehicle No'],
+                ['startPoint', 'text', 'From'],
+                ['destination', 'text', 'To'],
+                ['weight', 'text', 'Weight'],
+              ].map(([name, type, label]) => (
+                <div key={name}>
+                  <label className="text-sm font-medium">{label}</label>
+                  <Field name={name} type={type} className="w-full border rounded px-2 py-1.5 text-sm" />
+                  <ErrorMessage name={name} component="div" className="text-red-500 text-xs" />
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
+              ))}
 
-        {/* Generated LR Images */}
-        {generatedImages && (
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {Object.entries(generatedImages).map(([key, base64]) => (
-              <div key={key} className="flex flex-col items-center">
-                <img
-                  src={base64}
-                  alt={key}
-                  className="border w-full h-auto mb-2"
-                />
-                <button
-                  onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = base64;
-                    link.download = `${key}-${Date.now()}.png`;
-                    link.click();
+              {/* Consignee Name */}
+              <div className="relative lg:col-span-2">
+                <label className="text-sm font-medium">Consignee Name</label>
+                <Field
+                  name="consigneeName"
+                  type="text"
+                  className="w-full border rounded px-2 py-1.5 text-sm"
+                  onChange={(e) => {
+                    setFieldValue('consigneeName', e.target.value);
+                    handleClientSearch(e.target.value);
                   }}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Download {key.toUpperCase()}
+                />
+
+                {showClients && (
+                  <ul className="absolute z-10 bg-white border w-full max-h-40 overflow-y-auto">
+                    {clientSuggestions.map(c => (
+                      <li
+                        key={c._id}
+                        className="p-2 cursor-pointer hover:bg-gray-100"
+                        onClick={() => selectClient(c, setFieldValue)}
+                      >
+                        {c.name} – {c.address}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Address */}
+              <div className="lg:col-span-3">
+                <label className="text-sm font-medium">Consignee Address</label>
+                <Field name="consigneeAddress" className="w-full border rounded px-2 py-1.5 text-sm" />
+              </div>
+
+              {/* Description */}
+              <div className="relative lg:col-span-3">
+                <label className="text-sm font-medium">Description</label>
+                <Field
+                  name="description"
+                  className="w-full border rounded px-2 py-1.5 text-sm"
+                  onChange={(e) => {
+                    setFieldValue('description', e.target.value);
+                    handleGoodsSearch(e.target.value);
+                  }}
+                />
+
+                {showGoods && (
+                  <ul className="absolute z-10 bg-white border w-full max-h-40 overflow-y-auto">
+                    {goodsSuggestions.map(g => (
+                      <li
+                        key={g._id}
+                        className="p-2 cursor-pointer hover:bg-gray-100"
+                        onClick={() => selectGoods(g, setFieldValue)}
+                      >
+                        {g.description_goods}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="lg:col-span-3 text-right mt-3">
+                <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
+                  Create LR
                 </button>
               </div>
-            ))}
-          </div>
-        )}
+            </Form>
+          )}
+        </Formik>
       </div>
 
+      {/* Success Modal */}
       <CreateLRSuccess
         show={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          navigate('/viewlr');
-        }}
+        onClose={() => setShowSuccess(false)}
       />
-    </div>
+    </>
   );
 };
 

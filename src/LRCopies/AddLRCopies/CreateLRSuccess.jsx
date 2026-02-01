@@ -5,7 +5,7 @@ const CreateLRSuccess = ({ show, onClose }) => {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-5 rounded-lg text-center w-72">
         <h2 className="text-green-600 font-semibold mb-2">
-          LR Created 🎉
+          LR Created
         </h2>
 
         <button
